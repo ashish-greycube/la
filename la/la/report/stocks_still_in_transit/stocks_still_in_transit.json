@@ -1,0 +1,42 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2021-06-16 10:59:57.410882",
+ "disable_prepared_report": 0,
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "modified": "2021-06-16 13:13:22.968700",
+ "modified_by": "Administrator",
+ "module": "La",
+ "name": "Stocks Still In Transit",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "select \nse.name as \"StockEntry#:Link/Stock Entry:180\", \nse.posting_date as \"Date\",\nsed.item_code as \"ItemCode:Link/Item:100\",\nsed.item_name as \"ItemName:Data:200\",\nsed.s_warehouse as \"Warehouse:Link/Warehouse:200\",\nsed.t_warehouse as \"Warehouse:Link/Warehouse:200\",\nsed.qty as Qty, \nsed.transferred_qty as \"TransferredQty::120\"\nfrom `tabStock Entry` se inner join `tabStock Entry Detail` sed \non se.name = sed.parent and sed.transferred_qty < sed.qty\nand se.add_to_transit =1",
+ "ref_doctype": "Stock Entry",
+ "report_name": "Stocks Still In Transit",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "Stock User"
+  },
+  {
+   "role": "Manufacturing Manager"
+  },
+  {
+   "role": "Stock Manager"
+  },
+  {
+   "role": "Manufacturing User"
+  },
+  {
+   "role": "Sales User"
+  },
+  {
+   "role": "Fleet Manager"
+  }
+ ]
+}
