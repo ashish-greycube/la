@@ -19,5 +19,40 @@ frappe.ui.form.on('Material Request', {
       })
     }
 
+  },
+  mr_status_cf:function(frm){
+    frm.events.add_custom_button_for_transit(frm)
+  },
+  update_mr_status_manually: function(frm){
+    if (frm.doc.mr_status_cf=='Not Completed') {
+      frm.set_value('mr_status_cf','Completed')
+      frm.set_value('was_mr_status_set_manually_cf','1')
+      frappe.show_alert({
+        message: __("MR Status is updated to 'Completed'. 'Was MR Status Set Manually ?' is checked."),
+        indicator: 'green'
+      }, 10);      
+      
+    }else if(frm.doc.mr_status_cf=='Completed'){
+      frm.set_value('mr_status_cf','Not Completed')
+      frm.set_value('was_mr_status_set_manually_cf','1')
+      frappe.show_alert({
+        message: __("MR Status is updated to 'Not Completed'. 'Was MR Status Set Manually ?' is checked."),
+        indicator: 'yellow'
+      }, 10);          
+    }
+  },
+  add_custom_button_for_transit: function(frm){
+    frm.remove_custom_button('Complete Transit')
+    frm.remove_custom_button('Reopen Transit')
+    if (frm.doc.material_request_type == 'Material Transfer' && frm.doc.mr_status_cf=='Not Completed'){
+			frm.add_custom_button(__("Complete Transit"),
+				() => frm.events.update_mr_status_manually(frm));
+    }else if(frm.doc.material_request_type == 'Material Transfer' && frm.doc.mr_status_cf=='Completed'){
+			frm.add_custom_button(__("Reopen Transit"),
+				() => frm.events.update_mr_status_manually(frm));
+    }
+  },
+  onload_post_render:function(frm){
+    frm.events.add_custom_button_for_transit(frm)
   }
 })

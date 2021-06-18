@@ -91,8 +91,9 @@ doctype_js = {"Material Request" : "public/js/material_request.js"}
 
 doc_events = {
 	"Stock Entry": {
-		"on_submit": "la.api.validate_approvals_for_stock_entry",
-		"validate": "la.api.validate_approvals_for_stock_entry"
+		"on_submit": "la.api.check_approvals_and_update_mr_status_based_on_completed_qty",
+		"validate": "la.api.check_approvals_on_save_for_stock_entry",
+		"on_cancel":"la.api.update_material_request_status_cf_based_on_completed_qty"
 	}
 }
 
