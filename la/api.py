@@ -7,7 +7,6 @@ def check_approvals_and_update_mr_status_based_on_completed_qty(self,method):
   update_material_request_status_cf_based_on_completed_qty(self,method)
 
 def check_approvals_on_submit_for_stock_entry(self,method):
-  print('---inside custom SE',method)
   if method=='on_submit':
     if self.add_to_transit==1:
       if self.driver_receive_approval_cf==0:
@@ -38,7 +37,7 @@ def update_material_request_status_cf_based_on_completed_qty(self,method):
 
 def update_mr_status_cf(mr_name):
   mr_obj = frappe.get_doc("Material Request", mr_name)
-  if mr_obj.material_request_type=='Material Transfer' and mr_obj.was_mr_status_set_manually_cf==0:
+  if mr_obj.material_request_type=='Material Transfer' and (mr_obj.was_mr_status_set_manually_cf==None or mr_obj.was_mr_status_set_manually_cf==0):
     if len(mr_obj.items)>0:
       mr_status_cf='Completed'
       for item in mr_obj.items:
@@ -51,3 +50,8 @@ def update_mr_status_cf(mr_name):
     return True
   else:
     return False
+
+@frappe.whitelist()
+def update_material_request_mr_status_manually(mr_name,mr_status_cf):
+  frappe.db.set_value('Material Request', mr_name, {'mr_status_cf': mr_status_cf, 'was_mr_status_set_manually_cf':1})
+  return
