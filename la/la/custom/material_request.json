@@ -73,7 +73,7 @@
    "columns": 0,
    "creation": "2021-06-17 16:33:43.551604",
    "default": "0",
-   "depends_on": "eval:(doc.docstatus ==1 && doc.material_request_type=='Material Transfer' && doc.mr_status_cf =='Completed')",
+   "depends_on": "eval:(doc.docstatus ==1 && doc.material_request_type=='Material Transfer')",
    "description": null,
    "docstatus": 0,
    "dt": "Material Request",
