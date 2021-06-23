@@ -2,6 +2,13 @@ import frappe
 from frappe import _
 from frappe.utils import get_url_to_form
 
+def update_payment_information_for_pos_in_sales_invoice(self,method):
+  if self.is_pos==1 and self.outstanding_amount and self.payments:
+    self.payments[0].amount=self.outstanding_amount
+    self.run_method('set_paid_amount')
+    frappe.msgprint(_("OUtstanding amount {0} is set in payments table: {1} mode of payment.".format(frappe.bold(self.payments[0].amount),
+    frappe.bold(self.payments[0].mode_of_payment))),alert=True)
+
 def check_approvals_and_update_mr_status_based_on_completed_qty(self,method):
   check_approvals_on_submit_for_stock_entry(self,method)
   update_material_request_status_cf_based_on_completed_qty(self,method)

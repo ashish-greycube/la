@@ -94,6 +94,9 @@ doc_events = {
 		"on_submit": "la.api.check_approvals_and_update_mr_status_based_on_completed_qty",
 		"validate": "la.api.check_approvals_on_save_for_stock_entry",
 		"on_cancel":"la.api.update_material_request_status_cf_based_on_completed_qty"
+	},
+	"Sales Invoice":{
+		"validate":"la.api.update_payment_information_for_pos_in_sales_invoice"
 	}
 }
 
