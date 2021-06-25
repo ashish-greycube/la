@@ -31,7 +31,10 @@ app_license = "MIT"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-doctype_js = {"Material Request" : "public/js/material_request.js"}
+doctype_js = {
+	"Material Request" : "public/js/material_request.js",
+	"Sales Invoice" : "public/js/sales_invoice.js"
+	}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -96,7 +99,7 @@ doc_events = {
 		"on_cancel":"la.api.update_material_request_status_cf_based_on_completed_qty"
 	},
 	"Sales Invoice":{
-		"validate":"la.api.update_payment_information_for_pos_in_sales_invoice"
+		"validate":"la.api.sales_invoice_update_payment_information_for_pos_and_restrict_warehouse"
 	}
 }
 

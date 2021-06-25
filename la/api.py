@@ -2,12 +2,22 @@ import frappe
 from frappe import _
 from frappe.utils import get_url_to_form
 
-def update_payment_information_for_pos_in_sales_invoice(self,method):
+def sales_invoice_update_payment_information_for_pos_and_restrict_warehouse(self,method):
+  if self.pos_profile:
+    default_warehouse = frappe.db.get_value('POS Profile', self.pos_profile, 'warehouse')
+    if default_warehouse:
+      for item in self.items:
+        if item.warehouse!=default_warehouse:
+          frappe.throw(
+            msg=_("Row : {0} has warehouse selected as {1}. Please use your default warehouse {2}".format(frappe.bold(item.idx),item.warehouse,frappe.bold(default_warehouse))),
+            title=_('Incorrect warehouse.'))        
+  
   if self.is_pos==1 and self.outstanding_amount and self.payments:
     self.payments[0].amount=self.outstanding_amount
     self.run_method('set_paid_amount')
     frappe.msgprint(_("OUtstanding amount {0} is set in payments table: {1} mode of payment.".format(frappe.bold(self.payments[0].amount),
     frappe.bold(self.payments[0].mode_of_payment))),alert=True)
+
 
 def check_approvals_and_update_mr_status_based_on_completed_qty(self,method):
   check_approvals_on_submit_for_stock_entry(self,method)
