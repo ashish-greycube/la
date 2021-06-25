@@ -1,6 +1,6 @@
 frappe.ui.form.on("Sales Invoice", {
   "refresh": function (frm) {
-    make_item_rates_readonly(frm);
+    // make_item_rates_readonly(frm);
   },
   "taxes_and_charges": function (frm) {
     if (frm.doc.taxes_and_charges) {
@@ -25,6 +25,8 @@ function make_item_rates_readonly(frm) {
   df.read_only = frm.doc.is_return == 1 ? 1 : 0;
   frm.refresh_field("items")
 }
+
+// in Sales Tax and charge make tax included in rate checked by default
 function set_included_in_print_rate_for_taxes(frm) {
   for (let row of (frm.doc.taxes || [])) {
     frappe.model.set_value(row.doctype, row.name, "included_in_print_rate", 1);

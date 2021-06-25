@@ -2,7 +2,10 @@ import frappe
 from frappe import _
 from frappe.utils import get_url_to_form
 
-def sales_invoice_update_payment_information_for_pos_and_restrict_warehouse(self,method):
+def sales_invoice_custom_validation(self,method):
+  # [A] restrict warehouse to user's pos profile
+  # Allow user to see quantity from sales invoice but restrict him to sell from another warehouse (only warehouse linked to his profile in POS),
+  # for admin (user with no POS profile) allow to sell from any warehouse
   if self.pos_profile:
     default_warehouse = frappe.db.get_value('POS Profile', self.pos_profile, 'warehouse')
     if default_warehouse:
@@ -12,11 +15,25 @@ def sales_invoice_update_payment_information_for_pos_and_restrict_warehouse(self
             msg=_("Row : {0} has warehouse selected as {1}. Please use your default warehouse {2}".format(frappe.bold(item.idx),item.warehouse,frappe.bold(default_warehouse))),
             title=_('Incorrect warehouse.'))        
   
+  # [B] fetch paid amount in payment table in sales invoice
+  # When SI has is_pos = 1, after save, set doc.payments[0].amount  = outstanding_amount, also update the paid_amount field
   if self.is_pos==1 and self.outstanding_amount and self.payments:
     self.payments[0].amount=self.outstanding_amount
     self.run_method('set_paid_amount')
     frappe.msgprint(_("OUtstanding amount {0} is set in payments table: {1} mode of payment.".format(frappe.bold(self.payments[0].amount),
     frappe.bold(self.payments[0].mode_of_payment))),alert=True)
+
+  # Don't allow User to edit rate in sales return 
+  if self.is_return == 1 and self.return_against:
+    for item in self.items:
+      previous_sales_invoice_item=item.sales_invoice_item
+      previous_rate=frappe.db.get_value('Sales Invoice Item', previous_sales_invoice_item, 'rate')
+      if previous_rate != item.rate:
+          frappe.throw(
+            msg=_("Row : {0} has rate as {1}. It should be {2}. Please correct it to continue..".format(frappe.bold(item.idx),item.rate,frappe.bold(previous_rate))),
+            title=_('Cannot edit rate for return item.'))          
+
+
 
 
 def check_approvals_and_update_mr_status_based_on_completed_qty(self,method):

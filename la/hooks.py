@@ -99,7 +99,7 @@ doc_events = {
 		"on_cancel":"la.api.update_material_request_status_cf_based_on_completed_qty"
 	},
 	"Sales Invoice":{
-		"validate":"la.api.sales_invoice_update_payment_information_for_pos_and_restrict_warehouse"
+		"validate":"la.api.sales_invoice_custom_validation"
 	}
 }
 
